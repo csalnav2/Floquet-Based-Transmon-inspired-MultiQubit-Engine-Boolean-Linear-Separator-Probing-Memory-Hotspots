@@ -73,16 +73,13 @@ Paste something like this at the top of your private file:
    - CSV/JSON plot-data bundles + an `index.html` convenience page.
    - Optional local server and ngrok tunnel for sharing.
 
----
-
-## Mathematical notes (KaTeX / GitHub math ready)
+## Definitions used by the prototype
 
 Below are the **definitions used by the prototype** (or close “physics-standard” definitions when a proxy is used).
-All equations are written in KaTeX/LaTeX and should paste into **GitHub** or **Canva** math blocks.
 
 ### 1) Qubit state and Bloch vector
 
-For a single qubit reduced state $ \rho \in \mathbb{C}^{2\times 2} $,
+For a single qubit reduced state $ \rho \in \mathbb{C}^{2\times 2} $:
 $$
 \rho = \frac{1}{2}\left(I + \mathbf{r}\cdot\boldsymbol{\sigma}\right),
 \qquad
@@ -93,13 +90,13 @@ $$
 
 ### 2) SU(2) Wigner function for a spin‑1/2 (Bloch sphere)
 
-A Stratonovich–Weyl form is
+A Stratonovich–Weyl form is:
 $$
 W(\Omega) = \mathrm{Tr}\!\big[\rho\,\Delta(\Omega)\big],
 $$
-where $ \Omega=(\theta,\phi) $ and $ \Delta(\Omega) $ is the SU(2) Stratonovich–Weyl kernel.
+where $\Omega=(\theta,\phi)$ and $\Delta(\Omega)$ is the SU(2) Stratonovich–Weyl kernel.
 
-For spin‑$1/2$, a common normalized convention gives
+For spin‑$1/2$, a common normalized convention gives:
 $$
 W(\theta,\phi)
 = \frac{1}{4\pi}\Big(1+\sqrt{3}\,\mathbf{r}\cdot\mathbf{n}(\theta,\phi)\Big),
@@ -107,20 +104,20 @@ W(\theta,\phi)
 \mathbf{n}(\theta,\phi)=(\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta).
 $$
 
-> Conventions vary by factors of $ \sqrt{3} $ and $4\pi$; the key point is that $W$ is an affine function of the Bloch vector on the sphere.
+> Conventions vary by factors of $\sqrt{3}$ and $4\pi$; the key point is that $W$ is an affine function of the Bloch vector on the sphere.
 
 ### 3) HO-embedded (harmonic oscillator) Wigner function
 
 When a qubit is **embedded** into a truncated oscillator space (e.g., the $|0\rangle,|1\rangle$ subspace of an $N_{\rm ho}$-dimensional Fock space),
 the phase-space Wigner function can be computed with the standard oscillator definition:
 
-Integral form:
+**Integral form:**
 $$
 W(x,p)=\frac{1}{\pi}\int_{-\infty}^{\infty}dy\;
 e^{2ipy}\,\langle x-y|\rho|x+y\rangle .
 $$
 
-Displacement–parity form (often used numerically):
+**Displacement–parity form (often used numerically):**
 $$
 W(\alpha)=\frac{2}{\pi}\,\mathrm{Tr}\!\left[\rho\,D(2\alpha)\,\Pi\,D^\dagger(2\alpha)\right],
 $$
@@ -131,27 +128,27 @@ where $D(\alpha)$ is the displacement operator and $\Pi$ is parity.
 
 ### 4) Heat current (open quantum systems)
 
-If the dynamics decomposes into Liouvillian contributions
+If the dynamics decomposes into Liouvillian contributions:
 $$
 \dot\rho = -i[H(t),\rho] + \sum_k \mathcal{L}_k(\rho),
 $$
-then the (bath-associated) heat current from channel $k$ is often defined as
+then the (bath-associated) heat current from channel $k$ is often defined as:
 $$
 J_k(t) \equiv \dot Q_k(t) = \mathrm{Tr}\!\left[H(t)\,\mathcal{L}_k(\rho(t))\right].
 $$
 
-A **local per-qubit** heat current proxy can be written
+A **local per-qubit** heat current proxy can be written:
 $$
 J_i(t)=\mathrm{Tr}\!\left[H_i(t)\,\mathcal{L}_i(\rho(t))\right],
 \qquad
 J_{\rm lattice}(t)=\sum_i J_i(t).
 $$
 
-**Otto-like bookkeeping (qubit proxy):** if energy is approximated by
+**Otto-like bookkeeping (qubit proxy):** if energy is approximated by:
 $$
 E(t)\approx \omega(t)\,p_e(t) = \frac{\omega(t)}{2}\bigl(1-z(t)\bigr),
 $$
-then one convenient split is
+then one convenient split is:
 $$
 \dot Q(t) = -\frac{\omega(t)}{2}\,\dot z(t),
 \qquad
@@ -162,30 +159,30 @@ $$
 
 ### 5) Von Neumann entropy and mutual information
 
-Von Neumann entropy (bits):
+**Von Neumann entropy (bits):**
 $$
 S(\rho)=-\mathrm{Tr}\big(\rho\log_2\rho\big).
 $$
 
-Mutual information between subsystems $A$ and $B$:
+**Mutual information between subsystems $A$ and $B$:**
 $$
 I(A\!:\!B)=S(\rho_A)+S(\rho_B)-S(\rho_{AB}).
 $$
 
 ### 6) Concurrence (two qubits)
 
-For a two-qubit state $\rho$, define the spin-flipped state
+For a two-qubit state $\rho$, define the spin-flipped state:
 $$
 \tilde\rho = (\sigma_y\otimes\sigma_y)\,\rho^*\,(\sigma_y\otimes\sigma_y),
 $$
-and let $\lambda_1\ge \lambda_2\ge \lambda_3\ge \lambda_4$ be the square-roots of the eigenvalues of $\rho\tilde\rho$. Then
+and let $\lambda_1\ge \lambda_2\ge \lambda_3\ge \lambda_4$ be the square-roots of the eigenvalues of $\rho\tilde\rho$. Then:
 $$
 C(\rho)=\max\bigl(0,\lambda_1-\lambda_2-\lambda_3-\lambda_4\bigr).
 $$
 
 ### 7) Log-negativity (two qubits)
 
-Let $\rho^{T_B}$ be the partial transpose with respect to subsystem $B$. The log-negativity is
+Let $\rho^{T_B}$ be the partial transpose with respect to subsystem $B$. The log-negativity is:
 $$
 E_\mathcal{N}(\rho)=\log_2\left\|\rho^{T_B}\right\|_1,
 $$
@@ -199,24 +196,24 @@ $$
 \qquad
 \sum_k s_k^2 = 1 \;\; (\text{after normalization}).
 $$
-Then OSEE (bits) is
+Then OSEE (bits) is:
 $$
 S_{\rm OSEE} = -\sum_k s_k^2\,\log_2(s_k^2).
 $$
 
 ### 9) Fidelity, Bures distance, and Bures length
 
-Uhlmann fidelity:
+**Uhlmann fidelity:**
 $$
 F(\rho,\sigma)=\left(\mathrm{Tr}\sqrt{\sqrt{\rho}\,\sigma\,\sqrt{\rho}}\right)^2.
 $$
 
-Bures distance:
+**Bures distance:**
 $$
 D_B(\rho,\sigma)=\sqrt{2\left(1-\sqrt{F(\rho,\sigma)}\right)}.
 $$
 
-Discrete **Bures path length** (thermodynamic/geometric length proxy):
+**Discrete Bures path length (thermodynamic/geometric length proxy):**
 $$
 L_B \approx \sum_{k=1}^{T} D_B\bigl(\rho_{k},\rho_{k-1}\bigr),
 \qquad
@@ -225,7 +222,7 @@ $$
 
 ### 10) “Memory current” and hotspot scores (Bures-lag method)
 
-Define a lagged Bures distance
+Define a lagged Bures distance:
 $$
 D_{\rm lag}(t)=D_B\!\bigl(\rho(t),\rho(t-\tau)\bigr)
 \quad (\text{or use }\rho(0)\text{ when }t<\tau).
@@ -238,7 +235,7 @@ J_{\rm sep}(t)=\max\!\left(0,\frac{d}{dt}D_{\rm lag}(t)\right),
 J_{\rm ret}(t)=\max\!\left(0,-\frac{d}{dt}D_{\rm lag}(t)\right).
 $$
 
-A simple hotspot score is then
+A simple hotspot score is then:
 $$
 H_{\rm sep}(t)=\left(\frac{dL_B}{dt}\right)J_{\rm sep}(t),
 \qquad
@@ -249,7 +246,7 @@ typically normalized for visualization.
 ### 11) Berry-rate and geometry proxies (Bloch-path based)
 
 For a **unit Bloch direction** $\hat{\mathbf{n}}(t)=\mathbf{r}(t)/\|\mathbf{r}(t)\|$,
-a discrete solid angle from three successive points $ \hat{\mathbf{n}}_{k-1},\hat{\mathbf{n}}_k,\hat{\mathbf{n}}_{k+1} $ can be computed via
+a discrete solid angle from three successive points $\hat{\mathbf{n}}_{k-1},\hat{\mathbf{n}}_k,\hat{\mathbf{n}}_{k+1}$ can be computed via:
 $$
 \Omega_k
 =
@@ -259,22 +256,20 @@ $$
 \right).
 $$
 
-For spin‑$1/2$, the Berry phase increment magnitude proxy is
+For spin‑$1/2$, the Berry phase increment magnitude proxy is:
 $$
 |\Delta\gamma_k|\approx \frac{|\Omega_k|}{2},
 \qquad
 \dot\gamma(t_k)\approx \frac{|\Delta\gamma_k|}{\Delta t}.
 $$
 
-A simple QGT-norm proxy and curvature proxy can be built from finite differences of $\hat{\mathbf{n}}(t)$, e.g.
+A simple QGT-norm proxy and curvature proxy can be built from finite differences of $\hat{\mathbf{n}}(t)$, e.g.:
 $$
 \|\dot{\hat{\mathbf{n}}}\|^2 \approx \frac{\|\hat{\mathbf{n}}_{k}-\hat{\mathbf{n}}_{k-1}\|^2}{\Delta t^2},
 \qquad
 \kappa \approx \frac{\|\dot{\hat{\mathbf{n}}}\times \ddot{\hat{\mathbf{n}}}\|}{\|\dot{\hat{\mathbf{n}}}\|^3}
 $$
 (with careful regularization when $\|\dot{\hat{\mathbf{n}}}\|\to 0$).
-
----
 
 ## “Boolean Linear Separator” note
 
