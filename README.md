@@ -77,6 +77,10 @@ Paste something like this at the top of your private file:
 
 Below are the **definitions used by the prototype** (or close “physics-standard” definitions when a proxy is used).
 
+## Definitions used by the prototype
+
+Below are the **definitions used by the prototype** (or close “physics-standard” definitions when a proxy is used).
+
 ### 1) Qubit state and Bloch vector
 
 For a single qubit reduced state $ \rho \in \mathbb{C}^{2\times 2} $:
@@ -269,7 +273,7 @@ $$
 \qquad
 \kappa \approx \frac{\|\dot{\hat{\mathbf{n}}}\times \ddot{\hat{\mathbf{n}}}\|}{\|\dot{\hat{\mathbf{n}}}\|^3}
 $$
-(with careful regularization when $\|\dot{\hat{\mathbf{n}}}\|\to 0$).
+(with careful regularization when $\|\dot{\hat{\mathbf{n}}}\|\to 0$)..
 
 ## “Boolean Linear Separator” note
 
