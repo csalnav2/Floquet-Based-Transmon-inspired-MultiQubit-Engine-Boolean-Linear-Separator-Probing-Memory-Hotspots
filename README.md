@@ -77,11 +77,13 @@ Paste something like this at the top of your private file:
 
 ## Physics Definitions
 
+## Physics Definitions
+
 ### 1) Qubit state and Bloch vector
 For a single qubit reduced state $\rho \in \mathbb{C}^{2 \times 2}$:
 
 $$
-\rho = \frac{1}{2} \left( I + \mathbf{r} \cdot \vec{\sigma} \right)
+\rho = \frac{1}{2} \left( I + \mathbf{r} \cdot \boldsymbol{\sigma} \right)
 $$
 
 $$
@@ -114,7 +116,7 @@ When a qubit is **embedded** into a truncated oscillator space (e.g., the $|0\ra
 
 **Integral form:**
 $$
-W(x, p) = \frac{1}{\pi} \int_{-\infty}^{\infty} dy e^{2ipy} \langle x-y | \rho | x+y \rangle
+W(x, p) = \frac{1}{\pi} \int_{-\infty}^{\infty} dy \, e^{2ipy} \langle x-y | \rho | x+y \rangle
 $$
 
 **Displacement-parity form (often used numerically):**
@@ -213,7 +215,11 @@ $$
 
 **Discrete Bures path length (thermodynamic/geometric length proxy):**
 $$
-L_B \approx \sum_{k=1}^{T} D_B(\rho_{k}, \rho_{k-1}), \quad \frac{dL_B}{dt} \bigg|_{t_k} \approx \frac{D_B(\rho_k, \rho_{k-1})}{\Delta t}
+L_B \approx \sum_{k=1}^{T} D_B(\rho_{k}, \rho_{k-1})
+$$
+
+$$
+\frac{dL_B}{dt} \bigg|_{t_k} \approx \frac{D_B(\rho_k, \rho_{k-1})}{\Delta t}
 $$
 
 ### 10) "Memory current" and hotspot scores (Bures-lag method)
@@ -224,7 +230,10 @@ $$
 
 Define "separation" and "return" currents as the positive/negative parts of the time derivative:
 $$
-J_{sep}(t) = \max \left( 0, \frac{d}{dt} D_{lag}(t) \right), \quad J_{ret}(t) = \max \left( 0, -\frac{d}{dt} D_{lag}(t) \right)
+J_{sep}(t) = \max \left( 0, \frac{d}{dt} D_{lag}(t) \right)
+$$
+$$
+J_{ret}(t) = \max \left( 0, -\frac{d}{dt} D_{lag}(t) \right)
 $$
 
 A simple hotspot score is then:
@@ -246,8 +255,15 @@ $$
 
 A simple QGT-norm proxy and curvature proxy can be built from finite differences of $\hat{\mathbf{n}}(t)$:
 $$
-||\dot{\hat{\mathbf{n}}}||^2 \approx \frac{ ||\hat{\mathbf{n}}_{k} - \hat{\mathbf{n}}_{k-1}||^2 }{ \Delta t^2 }, \quad \kappa \approx \frac{ ||\dot{\hat{\mathbf{n}}} \times \ddot{\hat{\mathbf{n}}}|| }{ ||\dot{\hat{\mathbf{n}}}||^3 }
+||\dot{\hat{\mathbf{n}}}||^2 \approx \frac{ ||\hat{\mathbf{n}}_{k} - \hat{\mathbf{n}}_{k-1}||^2 }{ \Delta t^2 }
 $$
+
+$$
+\kappa \approx \frac{ ||\dot{\hat{\mathbf{n}}} \times \ddot{\hat{\mathbf{n}}}|| }{ ||\dot{\hat{\mathbf{n}}}||^3 }
+$$
+
+## "Boolean Linear Separator" note
+The “Boolean Linear Separator” name references the fact that the prototype includes a perceptron-style / thermodynamic-neuron-style logic self-test for linearly separable boolean functions (e.g., NOT / NOR / 3‑MAJORITY). This is inspired by thermodynamic computing models that implement linearly separable functions with heat currents and auxiliary reservoirs.
 ## “Boolean Linear Separator” note
 
 The “Boolean Linear Separator” name references the fact that the prototype includes a **perceptron-style / thermodynamic-neuron-style** logic self-test for **linearly separable** boolean functions (e.g., NOT / NOR / 3‑MAJORITY).  
