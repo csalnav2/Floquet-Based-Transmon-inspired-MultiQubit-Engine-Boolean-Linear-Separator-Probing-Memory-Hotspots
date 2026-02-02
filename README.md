@@ -57,8 +57,10 @@ The simulation generates high-resolution diagnostics (GIF/MP4):
 To run the verification skeleton:
 ```bash
 python Floquet_Transmon_MultiQubit_Engine_Boolean_Linear_Separator_PUBLIC_SKELETON.py
-📚 References
+
+## 📚 References
 Core Concepts
+
 Thermodynamic Computing: Lipka‑Bartosik et al., Science Advances 10(36), 2024
 
 Transmon Theory: Koch et al., Phys. Rev. A 76, 042319 (2007)
