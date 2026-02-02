@@ -1,18 +1,3 @@
-# Floquet Transmon Multi-Qubit Engine & Boolean Linear Separator
-
-A research-grade simulation prototype for a 4-qubit Transmon-inspired lattice. This project implements a **Floquet-driven open quantum system** to explore thermodynamic cycles, entanglement dynamics, and thermodynamic logic gates.
-
-The system is modeled using the **GKSL (Gorini-Kossakowski-Sudarshan-Lindblad)** master equation, featuring tunable capacitive ($XX+YY$) and inductive ($ZZ$) couplings, periodic bath drives (Floquet engineering), and a "control daemon" for pulse shaping.
-
-## 📂 Repository Structure
-
-* **`Floquet_Transmon_MultiQubit_Engine_Boolean_Linear_Separator_PUBLIC_SKELETON.py`**
-    * The public interface file. It contains the class structures, function signatures, and configuration dataclasses used in the private implementation. Use this to understand the data flow and physics models.
-* *(Private)* `quantum_unified_revised_v136.py`
-    * The full implementation (redacted) which performs the 16x16 density matrix evolution, renders the dashboard, and exports metrics.
-
----
-
 ## ⚛️ Physics & Mathematical Model
 
 ### 1. The Hamiltonian (Transmon Lattice)
@@ -25,7 +10,7 @@ $$
 The interaction term includes capacitive (exchange) and inductive coupling:
 
 $$
-H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} \ \left( \sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)} \right) + J_{\text{ind}} \sigma_z^{(i)}\sigma_z^{(j)} \right]
+H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} \, \left( \sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)} \right) + J_{\text{ind}} \, \sigma_z^{(i)}\sigma_z^{(j)} \right]
 $$
 
 ### 2. Open System Dynamics (GKSL)
@@ -81,17 +66,16 @@ $$
 $$
 
 ### 5. Boolean Linear Separation (Thermodynamic Logic)
-The simulation includes a test for **thermodynamic neural processing**. A physical system acts as a perceptron if its steady-state or limit-cycle observable $O$ (e.g., excited population) separates input classes $u \in \{0,1\}^N$ via a hyperplane:
+The simulation includes a test for **thermodynamic neural processing**. The quantum lattice functions as a reservoir that maps low-dimensional inputs into a high-dimensional Hilbert space—effectively performing a **Quantum Feature Lift**.
+
+A physical system acts as a perceptron if its observable $O$ separates input classes $u \in \{0,1\}^N$ via a hyperplane:
 
 $$
 O(u) \approx \sigma \left( \vec{w} \cdot \vec{u} + b \right)
 $$
 
-We test this by encoding inputs into the bath drives of Q1/Q2 and measuring if the lattice response can classify linearly separable logic gates (AND, OR) versus non-linear ones (XOR).
-
----
-
-## 📚 References (Core)
+* **Linear Gates:** We test the baseline system on linearly separable functions (AND, OR) by encoding inputs into bath drives.
+* **Non-Linear Upgrades (XOR):** The architecture supports upgrading the readout to utilize non-linear quantum metrics (such as Log-Negativity or $ZZ$-correlations). This enables the classification of non-linearly separable functions (like XOR) by exploiting the natural entanglement dynamics of the lattice.
 
 **Thermodynamic Computing & Neurons**
 * Lipka‑Bartosik, Perarnau‑Llobet, Brunner. *Thermodynamic computing via autonomous quantum thermal machines*. **Science Advances** 10(36):eadm8792 (2024).  
