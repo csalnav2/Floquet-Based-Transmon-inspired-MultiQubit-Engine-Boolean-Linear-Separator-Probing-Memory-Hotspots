@@ -15,18 +15,46 @@ The system is modeled using the **GKSL (Gorini-Kossakowski-Sudarshan-Lindblad)**
 
 ## ⚛️ Physics & Mathematical Model
 
-### 1. The Hamiltonian (Transmon Lattice)
-The system consists of 4 Transmon qubits modeled as Duffing oscillators truncated to the qubit subspace, driven by time-dependent fields. The lattice Hamiltonian $H(t)$ is:
+### 1. Hamiltonian (Transmon Lattice)
+
+The system consists of **4 transmon qubits** modeled as Duffing oscillators (truncated to the qubit subspace), driven by time-dependent fields. The lattice Hamiltonian \(H(t)\) is:
 
 $$
-H(t) = \sum_{j=1}^4 \left[ \frac{\omega_{01,j}(t)}{2} \sigma_z^{(j)} + \frac{\Omega_d(t)}{2} \left( \sigma_x^{(j)} \cos(\phi_j(t)) + \sigma_y^{(j)} \sin(\phi_j(t)) \right) \right] + H_{\text{int}}
+H(t)
+=
+\sum_{j=1}^{4}
+\left[
+\frac{\omega_{01,j}(t)}{2}\,\sigma_{z}^{(j)}
++
+\frac{\Omega_{d}(t)}{2}
+\left(
+\sigma_{x}^{(j)}\cos\!\big(\phi_{j}(t)\big)
++
+\sigma_{y}^{(j)}\sin\!\big(\phi_{j}(t)\big)
+\right)
+\right]
++
+H_{\mathrm{int}}.
 $$
 
-where the interaction term includes capacitive (exchange) and inductive coupling:
+The interaction term includes capacitive (exchange) and inductive coupling:
 
 $$
-H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} \, \left( \sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)} \right) + J_{\text{ind}} \, \sigma_z^{(i)}\sigma_z^{(j)} \right]
+H_{\mathrm{int}}
+=
+\sum_{\langle i,j\rangle}
+\left[
+J_{\mathrm{cap}}
+\left(
+\sigma_{x}^{(i)}\sigma_{x}^{(j)}
++
+\sigma_{y}^{(i)}\sigma_{y}^{(j)}
+\right)
++
+J_{\mathrm{ind}}\,\sigma_{z}^{(i)}\sigma_{z}^{(j)}
+\right].
 $$
+
 ### 2. Open System Dynamics (GKSL)
 The system evolves according to the Lindblad master equation:
 
