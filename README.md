@@ -86,7 +86,3 @@ python Floquet_Transmon_MultiQubit_Engine_Boolean_Linear_Separator_PUBLIC_SKELET
 > **⚠️ Disclaimer:** This repository is **not** a hardware-validated transmon simulator and should not be treated as an engineering blueprint. It is a research/visualization prototype exploring ideas at the intersection of Floquet dynamics, open systems, and thermodynamic/information diagnostics.
 
 ```
-
-Would you like me to generate a `requirements.txt` file for this project based on the libraries usually needed for these simulations (like `QuTiP`, `numpy`, and `matplotlib`)?
-
-```
