@@ -15,44 +15,17 @@ The system is modeled using the **GKSL (Gorini-Kossakowski-Sudarshan-Lindblad)**
 
 ## ⚛️ Physics & Mathematical Model
 
-### 1. Hamiltonian (Transmon Lattice)
-
-The system consists of **4 transmon qubits** modeled as Duffing oscillators (truncated to the qubit subspace), driven by time-dependent fields. The lattice Hamiltonian \(H(t)\) is:
+### 1. The Hamiltonian (Transmon Lattice)
+The system consists of 4 Transmon qubits modeled as Duffing oscillators truncated to the qubit subspace, driven by time-dependent fields. The lattice Hamiltonian $H(t)$ is:
 
 $$
-H(t)
-=
-\sum_{j=1}^{4}
-\left[
-\frac{\omega_{01,j}(t)}{2}\,\sigma_{z}^{(j)}
-+
-\frac{\Omega_{d}(t)}{2}
-\left(
-\sigma_{x}^{(j)}\cos\!\big(\phi_{j}(t)\big)
-+
-\sigma_{y}^{(j)}\sin\!\big(\phi_{j}(t)\big)
-\right)
-\right]
-+
-H_{\mathrm{int}}.
+H(t) = \sum_{j=1}^4 \left[ \frac{\omega_{01,j}(t)}{2} \sigma_z^{(j)} + \frac{\Omega_d(t)}{2} \left( \sigma_x^{(j)} \cos(\phi_j(t)) + \sigma_y^{(j)} \sin(\phi_j(t)) \right) \right] + H_{\text{int}}
 $$
 
 The interaction term includes capacitive (exchange) and inductive coupling:
 
 $$
-H_{\mathrm{int}}
-=
-\sum_{\langle i,j\rangle}
-\left[
-J_{\mathrm{cap}}
-\left(
-\sigma_{x}^{(i)}\sigma_{x}^{(j)}
-+
-\sigma_{y}^{(i)}\sigma_{y}^{(j)}
-\right)
-+
-J_{\mathrm{ind}}\,\sigma_{z}^{(i)}\sigma_{z}^{(j)}
-\right].
+H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} \ \left( \sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)} \right) + J_{\text{ind}} \sigma_z^{(i)}\sigma_z^{(j)} \right]
 $$
 
 ### 2. Open System Dynamics (GKSL)
@@ -62,7 +35,7 @@ $$
 \frac{d\rho}{dt} = -i [H(t), \rho] + \sum_{j=1}^4 \left( \gamma_{\downarrow,j} \mathcal{D}[\sigma_-^{(j)}] \rho + \gamma_{\uparrow,j} \mathcal{D}[\sigma_+^{(j)}] \rho + \gamma_{\phi,j} \mathcal{D}[\sigma_z^{(j)}] \rho \right)
 $$
 
-where the dissipator is defined as $\mathcal{D}[L]\rho = L\rho L^\dagger - \frac{1}{2}\{L^\dagger L, \rho\}$. The relaxation rates $\gamma_{\uparrow/\downarrow}$ obey detailed balance determined by the instantaneous bath temperature $T_b(t)$:
+where the dissipator is $\mathcal{D}[L]\rho = L\rho L^\dagger - \frac{1}{2}\{L^\dagger L, \rho\}$. The relaxation rates $\gamma_{\uparrow/\downarrow}$ obey detailed balance determined by the instantaneous bath temperature $T_b(t)$:
 
 $$
 \frac{\gamma_{\uparrow}}{\gamma_{\downarrow}} = e^{-\Delta E / k_B T_b(t)}
@@ -118,6 +91,51 @@ We test this by encoding inputs into the bath drives of Q1/Q2 and measuring if t
 
 ---
 
+## 📚 References (Core)
+
+**Thermodynamic Computing & Neurons**
+* Lipka‑Bartosik, Perarnau‑Llobet, Brunner. *Thermodynamic computing via autonomous quantum thermal machines*. **Science Advances** 10(36):eadm8792 (2024).  
+    [DOI: 10.1126/sciadv.adm8792](https://doi.org/10.1126/sciadv.adm8792)
+
+**Transmon Qubit Theory**
+* Koch et al. *Charge-insensitive qubit design derived from the Cooper pair box*. **Phys. Rev. A** 76, 042319 (2007).  
+    [DOI: 10.1103/PhysRevA.76.042319](https://doi.org/10.1103/PhysRevA.76.042319)
+
+**Open Systems (GKSL / Lindblad)**
+* Gorini, Kossakowski, Sudarshan. *Completely positive dynamical semigroups of N-level systems*. **J. Math. Phys.** 17, 821 (1976).  
+    [DOI: 10.1063/1.522979](https://doi.org/10.1063/1.522979)
+* Lindblad. *On the generators of quantum dynamical semigroups*. **Commun. Math. Phys.** 48, 119 (1976).  
+    [DOI: 10.1007/BF01608499](https://doi.org/10.1007/BF01608499)
+
+**Floquet Theory**
+* Shirley. *Solution of the Schrödinger equation with a Hamiltonian periodic in time*. **Phys. Rev.** 138, B979 (1965).  
+    [DOI: 10.1103/PhysRev.138.B979](https://doi.org/10.1103/PhysRev.138.B979)
+* Sambe. *Steady states and quasienergies of a quantum-mechanical system in an oscillating field*. **Phys. Rev. A** 7, 2203 (1973).  
+    [DOI: 10.1103/PhysRevA.7.2203](https://doi.org/10.1103/PhysRevA.7.2203)
+
+**Entanglement & Geometry Diagnostics**
+* **OSEE:** Prosen, Pižorn. *Operator space entanglement entropy in a transverse Ising chain*. **Phys. Rev. A** 76, 032316 (2007).  
+    [DOI: 10.1103/PhysRevA.76.032316](https://doi.org/10.1103/PhysRevA.76.032316)
+* **Concurrence:** Wootters. *Entanglement of formation of an arbitrary state of two qubits*. **Phys. Rev. Lett.** 80, 2245 (1998).  
+    [DOI: 10.1103/PhysRevLett.80.2245](https://doi.org/10.1103/PhysRevLett.80.2245)
+* **Log-negativity:** Vidal, Werner. *Computable measure of entanglement*. **Phys. Rev. A** 65, 032314 (2002).  
+    [DOI: 10.1103/PhysRevA.65.032314](https://doi.org/10.1103/PhysRevA.65.032314)
+* **Berry Phase:** Berry. *Quantal phase factors accompanying adiabatic changes*. **Proc. R. Soc. A** 392, 45 (1984).  
+    [DOI: 10.1098/rspa.1984.0023](https://doi.org/10.1098/rspa.1984.0023)
+
+**Fidelity & Metric Geometry**
+* Uhlmann. *The “transition probability” in the state space of a C*-algebra*. **Rep. Math. Phys.** 9, 273 (1976).  
+    [DOI: 10.1016/0034-4877(76)90060-4](https://doi.org/10.1016/0034-4877(76)90060-4)
+* Jozsa. *Fidelity for mixed quantum states*. **J. Mod. Opt.** 41, 2315 (1994).  
+    [DOI: 10.1080/09500349414552171](https://doi.org/10.1080/09500349414552171)
+* **Thermodynamic Length:** Crooks. *Measuring thermodynamic length*. **Phys. Rev. Lett.** 99, 100602 (2007).  
+    [DOI: 10.1103/PhysRevLett.99.100602](https://doi.org/10.1103/PhysRevLett.99.100602)
+
+---
+
+## ⚠️ Disclaimer
+
+This repository is **not** a hardware-validated transmon simulator and should not be treated as an engineering blueprint. It is a research/visualization prototype exploring ideas at the intersection of Floquet dynamics, open systems, and thermodynamic/information diagnostics.
 ## 📊 Dashboard Visualization
 The code generates a high-resolution dashboard (GIF/MP4) containing:
 1.  **3D Bloch Spheres:** With trajectories, "memory hotspot" trails, and leakage warnings.
