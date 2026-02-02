@@ -22,10 +22,10 @@ $$
 H(t) = \sum_{j=1}^4 \left[ \frac{\omega_{01,j}(t)}{2} \sigma_z^{(j)} + \frac{\Omega_d(t)}{2} \left( \sigma_x^{(j)} \cos(\phi_j(t)) + \sigma_y^{(j)} \sin(\phi_j(t)) \right) \right] + H_{\text{int}}
 $$
 
-where the interaction term includes capacitive (exchange) and inductive coupling:
+The interaction term $H_{\text{int}}$ includes capacitive (exchange) and inductive (Ising-like) coupling:
 
 $$
-H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} (\sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)}) + J_{\text{ind}} \sigma_z^{(i)}\sigma_z^{(j)} \right]
+H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} \left( \sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)} \right) + J_{\text{ind}} \sigma_z^{(i)}\sigma_z^{(j)} \right]
 $$
 
 ### 2. Open System Dynamics (GKSL)
@@ -35,7 +35,7 @@ $$
 \frac{d\rho}{dt} = -i [H(t), \rho] + \sum_{j=1}^4 \left( \gamma_{\downarrow,j} \mathcal{D}[\sigma_-^{(j)}] \rho + \gamma_{\uparrow,j} \mathcal{D}[\sigma_+^{(j)}] \rho + \gamma_{\phi,j} \mathcal{D}[\sigma_z^{(j)}] \rho \right)
 $$
 
-where $\mathcal{D}[L]\rho = L\rho L^\dagger - \frac{1}{2}\{L^\dagger L, \rho\}$. The relaxation rates $\gamma_{\uparrow/\downarrow}$ obey detailed balance determined by the instantaneous bath temperature $T_b(t)$:
+where the dissipator is defined as $\mathcal{D}[L]\rho = L\rho L^\dagger - \frac{1}{2}\{L^\dagger L, \rho\}$. The relaxation rates $\gamma_{\uparrow/\downarrow}$ obey detailed balance determined by the instantaneous bath temperature $T_b(t)$:
 
 $$
 \frac{\gamma_{\uparrow}}{\gamma_{\downarrow}} = e^{-\Delta E / k_B T_b(t)}
@@ -86,6 +86,17 @@ The simulation includes a test for **thermodynamic neural processing**. A physic
 $$
 O(u) \approx \sigma \left( \vec{w} \cdot \vec{u} + b \right)
 $$
+
+We test this by encoding inputs into the bath drives of Q1/Q2 and measuring if the lattice response can classify linearly separable logic gates (AND, OR) versus non-linear ones (XOR).
+
+---
+
+## 📊 Dashboard Visualization
+The code generates a high-resolution dashboard (GIF/MP4) containing:
+1.  **3D Bloch Spheres:** With trajectories, "memory hotspot" trails, and leakage warnings.
+2.  **Phase Space:** 3D Wigner function surfaces (single-qubit and collective).
+3.  **Metrics:** Real-time plots of Coherence, Purity, Bell-correlations, and Bures distance.
+4.  **Thermodynamics:** Virtual temperatures, heat currents, and Otto efficiency.
 
 We test this by encoding inputs into the bath drives of Q1/Q2 and measuring if the lattice response can classify linearly separable logic gates (AND, OR) versus non-linear ones (XOR).
 
