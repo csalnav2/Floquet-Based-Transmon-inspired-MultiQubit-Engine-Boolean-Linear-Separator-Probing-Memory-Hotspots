@@ -1,7 +1,8 @@
+
 ## ⚛️ Physics & Mathematical Model
 
 ### 1. The Hamiltonian (Transmon Lattice)
-The system consists of 4 Transmon qubits modeled as Duffing oscillators truncated to the qubit subspace, driven by time-dependent fields. The lattice Hamiltonian $H(t)$ is defined as:
+The system consists of 4 Transmon qubits modeled as Duffing oscillators truncated to the qubit subspace, driven by time-dependent fields. The lattice Hamiltonian $H(t)$ is:
 
 $$H(t) = \sum_{j=1}^4 \left[ \frac{\omega_{01,j}(t)}{2} \sigma_z^{(j)} + \frac{\Omega_d(t)}{2} \left( \sigma_x^{(j)} \cos(\phi_j(t)) + \sigma_y^{(j)} \sin(\phi_j(t)) \right) \right] + H_{\text{int}}$$
 
@@ -35,10 +36,8 @@ $$\frac{\gamma_{\uparrow}}{\gamma_{\downarrow}} = e^{-\Delta E / k_B T_b(t)}$$
     $$\dot{\gamma}_g \propto \frac{1}{2} (1 - \cos \theta) \dot{\phi}$$
 
 ### 5. Boolean Linear Separation (Thermodynamic Logic)
-The simulation tests for **thermodynamic neural processing**. The quantum lattice maps low-dimensional inputs into a high-dimensional Hilbert space (**Quantum Feature Lift**).
 
 * **Linear Gates:** Tested on separable functions (AND, OR) via bath drives.
-* **Non-Linear Upgrades (XOR):** Upgrades the readout to utilize non-linear metrics (Log-Negativity, $ZZ$-correlations) to solve non-linearly separable functions.
 
 ---
 
@@ -58,29 +57,36 @@ To run the verification skeleton:
 ```bash
 python Floquet_Transmon_MultiQubit_Engine_Boolean_Linear_Separator_PUBLIC_SKELETON.py
 
+```
+
+---
+
 ## 📚 References
-Core Concepts
 
-Thermodynamic Computing: Lipka‑Bartosik et al., Science Advances 10(36), 2024
+### Core Concepts
 
-Transmon Theory: Koch et al., Phys. Rev. A 76, 042319 (2007)
+* **Thermodynamic Computing:** Lipka‑Bartosik et al., [Science Advances 10(36), 2024](https://doi.org/10.1126/sciadv.adm8792)
+* **Transmon Theory:** Koch et al., [Phys. Rev. A 76, 042319 (2007)](https://doi.org/10.1103/PhysRevA.76.042319)
+* **Lindblad Dynamics:** [Gorini et al., J. Math. Phys. 17, 821 (1976)](https://doi.org/10.1063/1.522979) | [Lindblad, Commun. Math. Phys. 48, 119 (1976)](https://doi.org/10.1007/BF01608499)
 
-Lindblad Dynamics: Gorini et al., J. Math. Phys. 17, 821 (1976) | Lindblad, Commun. Math. Phys. 48, 119 (1976)
+### Floquet & Entanglement
 
-Floquet & Entanglement
-Floquet Theory: Shirley, Phys. Rev. 138, B979 (1965) | Sambe, Phys. Rev. A 7, 2203 (1973)
+* **Floquet Theory:** [Shirley, Phys. Rev. 138, B979 (1965)](https://doi.org/10.1103/PhysRev.138.B979) | [Sambe, Phys. Rev. A 7, 2203 (1973)](https://doi.org/10.1103/PhysRevA.7.2203)
+* **Log-Negativity:** [Vidal & Werner, Phys. Rev. A 65, 032314 (2002)](https://doi.org/10.1103/PhysRevA.65.032314)
+* **OSEE:** [Prosen & Pižorn, Phys. Rev. A 76, 032316 (2007)](https://doi.org/10.1103/PhysRevA.76.032316)
+* **Berry Phase:** [Berry, Proc. R. Soc. A 392, 45 (1984)](https://doi.org/10.1098/rspa.1984.0023)
 
-Log-Negativity: Vidal & Werner, Phys. Rev. A 65, 032314 (2002)
+### Geometry & Fidelity
 
-OSEE: Prosen & Pižorn, Phys. Rev. A 76, 032316 (2007)
+* **Fidelity:** [Uhlmann, Rep. Math. Phys. 9, 273 (1976)](https://doi.org/10.1016/0034-4877(76)90060-4) | [Jozsa, J. Mod. Opt. 41, 2315 (1994)](https://doi.org/10.1080/09500349414552171)
+* **Thermodynamic Length:** [Crooks, Phys. Rev. Lett. 99, 100602 (2007)](https://doi.org/10.1103/PhysRevLett.99.100602)
 
-Berry Phase: Berry, Proc. R. Soc. A 392, 45 (1984)
+---
 
-Geometry & Fidelity
-Fidelity: Uhlmann, Rep. Math. Phys. 9, 273 (1976) | Jozsa, J. Mod. Opt. 41, 2315 (1994)
+> **⚠️ Disclaimer:** This repository is **not** a hardware-validated transmon simulator and should not be treated as an engineering blueprint. It is a research/visualization prototype exploring ideas at the intersection of Floquet dynamics, open systems, and thermodynamic/information diagnostics.
 
-Thermodynamic Length: Crooks, Phys. Rev. Lett. 99, 100602 (2007)
+```
 
-⚠️ Disclaimer: This is a research/visualization prototype exploring Floquet dynamics and thermodynamic diagnostics. It is not a hardware-validated engineering blueprint.
+Would you like me to generate a `requirements.txt` file for this project based on the libraries usually needed for these simulations (like `QuTiP`, `numpy`, and `matplotlib`)?
 
-> **⚠️ Disclaimer** > This repository is **not** a hardware-validated transmon simulator and should not be treated as an engineering blueprint. It is a research/visualization prototype exploring ideas at the intersection of Floquet dynamics, open systems, and thermodynamic/information diagnostics.
+```
