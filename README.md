@@ -1,323 +1,151 @@
-# Floquet-Based Transmon-Inspired MultiQubit Engine — Boolean Linear Separator (Public Skeleton)
+# Floquet Transmon Multi-Qubit Engine & Boolean Linear Separator
 
-This repository contains a **structure-only, redacted “public skeleton”** of a research prototype that explores a **Floquet-driven, transmon-inspired multi-qubit lattice** coupled to thermal environments, with a dashboard-style visualization and a battery of thermodynamic / information-theoretic diagnostics.
+A research-grade simulation prototype for a 4-qubit Transmon-inspired lattice. This project implements a **Floquet-driven open quantum system** to explore thermodynamic cycles, entanglement dynamics, and thermodynamic logic gates.
 
-> **Why a skeleton?**  
-> The intent is to share the **architecture, module layout, and metric definitions** without exposing implementation details (function bodies are intentionally omitted).
+The system is modeled using the **GKSL (Gorini-Kossakowski-Sudarshan-Lindblad)** master equation, featuring tunable capacitive ($XX+YY$) and inductive ($ZZ$) couplings, periodic bath drives (Floquet engineering), and a "control daemon" for pulse shaping.
 
----
+## 📂 Repository Structure
 
-## What’s in this repo
-
-### Public (this repo)
-- `Floquet_Transmon_MultiQubit_Engine_Boolean_Linear_Separator_PUBLIC_SKELETON.py`  
-  Main architecture outline: lattice evolution, metrics, dashboard assembly, export hooks, and optional control-daemon scaffolding.
-
-- `quantum_unified_revised_v109_complete_PUBLIC_SKELETON.py`  
-  Alternate/legacy “unified” layout (also redacted).
-
-- `TransmonLatticeFloquetBreal_PUBLIC_SKELETON.py`  
-  Notebook-origin variant (also redacted).
-
-> **Note:** The public skeleton files **do not run** (no bodies). They are meant for readers to understand the **structure** and **interfaces**.
-
-### Private (not included)
-A runnable implementation that:
-- evolves a 4‑qubit global density matrix,
-- computes entanglement + geometry + thermodynamic diagnostics,
-- renders an animated dashboard (GIF/MP4),
-- exports time-series plot data and Wigner snapshots,
-- optionally runs a lightweight “control daemon” optimization loop.
+* **`Floquet_Transmon_MultiQubit_Engine_Boolean_Linear_Separator_PUBLIC_SKELETON.py`**
+    * The public interface file. It contains the class structures, function signatures, and configuration dataclasses used in the private implementation. Use this to understand the data flow and physics models.
+* *(Private)* `quantum_unified_revised_v136.py`
+    * The full implementation (redacted) which performs the 16x16 density matrix evolution, renders the dashboard, and exports metrics.
 
 ---
 
-## Suggested file header for your private runnable code
+## ⚛️ Physics & Mathematical Model
 
-Paste something like this at the top of your private file:
+### 1. The Hamiltonian (Transmon Lattice)
+The system consists of 4 Transmon qubits modeled as Duffing oscillators truncated to the qubit subspace, driven by time-dependent fields. The lattice Hamiltonian $H(t)$ is:
 
-```python
-# Floquet-Based Transmon-Inspired MultiQubit Engine — Boolean Linear Separator
-# --------------------------------------------------------------------------
-# Research-grade simulation prototype of a Floquet-driven, transmon-inspired
-# multi-qubit lattice coupled to thermal environments, with dashboard visualization
-# and thermodynamic / quantum-information diagnostics.
-#
-# Public repository note:
-#   This file has a structure-only public skeleton counterpart on GitHub.
-```
+$$
+H(t) = \sum_{j=1}^4 \left[ \frac{\omega_{01,j}(t)}{2} \sigma_z^{(j)} + \frac{\Omega_d(t)}{2} \left( \sigma_x^{(j)} \cos(\phi_j(t)) + \sigma_y^{(j)} \sin(\phi_j(t)) \right) \right] + H_{\text{int}}
+$$
+
+where the interaction term includes capacitive (exchange) and inductive coupling:
+
+$$
+H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} (\sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)}) + J_{\text{ind}} \sigma_z^{(i)}\sigma_z^{(j)} \right]
+$$
+
+### 2. Open System Dynamics (GKSL)
+The system evolves according to the Lindblad master equation:
+
+$$
+\frac{d\rho}{dt} = -i [H(t), \rho] + \sum_{j=1}^4 \left( \gamma_{\downarrow,j} \mathcal{D}[\sigma_-^{(j)}] \rho + \gamma_{\uparrow,j} \mathcal{D}[\sigma_+^{(j)}] \rho + \gamma_{\phi,j} \mathcal{D}[\sigma_z^{(j)}] \rho \right)
+$$
+
+where $\mathcal{D}[L]\rho = L\rho L^\dagger - \frac{1}{2}\{L^\dagger L, \rho\}$. The relaxation rates $\gamma_{\uparrow/\downarrow}$ obey detailed balance determined by the instantaneous bath temperature $T_b(t)$:
+
+$$
+\frac{\gamma_{\uparrow}}{\gamma_{\downarrow}} = e^{-\Delta E / k_B T_b(t)}
+$$
+
+### 3. Thermodynamic Diagnostics
+
+**Heat Current ($J$):**
+We define the local heat current flowing into qubit $j$ as the change in energy due to the dissipative channel $\mathcal{L}_j$:
+
+$$
+J_j(t) = \text{Tr}\left[ H(t) \mathcal{L}_j(\rho(t)) \right]
+$$
+
+**Otto Efficiency ($\eta$):**
+For a Floquet cycle with distinct "hot" and "cold" strokes, we approximate the efficiency using the work output $W_{\text{out}}$ and heat absorbed $Q_{\text{hot}}$:
+
+$$
+\eta = \frac{W_{\text{out}}}{Q_{\text{hot}}} = \frac{-\oint \text{Tr}(\rho \dot{H}) dt}{\int_{\text{hot}} \text{Tr}(H \dot{\rho}_{\text{diss}}) dt}
+$$
+
+### 4. Entanglement & Geometry
+
+**Logarithmic Negativity:**
+A computable measure of entanglement for mixed states (e.g., Q1 vs Q2):
+
+$$
+E_N(\rho) = \log_2 || \rho^{T_B} ||_1
+$$
+
+**OSEE (Operator-Space Entanglement Entropy):**
+Measures the complexity of the density matrix itself by Schmidt-decomposing the operator $|\rho\rangle\rangle$ in Liouville space:
+
+$$
+S_{\text{OSEE}} = - \sum_k s_k^2 \log_2 (s_k^2)
+$$
+
+**Geometric Phase Proxy:**
+We compute a proxy for the geometric phase rate $\dot{\gamma}_g$ based on the solid angle $\Omega$ swept by the Bloch vector $\vec{r}(t)$:
+
+$$
+\dot{\gamma}_g \propto \frac{1}{2} (1 - \cos \theta) \dot{\phi} \approx \frac{1}{2} \text{SolidAngle}(\vec{r}_t, \vec{r}_{t+\delta})
+$$
+
+### 5. Boolean Linear Separation (Thermodynamic Logic)
+The simulation includes a test for **thermodynamic neural processing**. A physical system acts as a perceptron if its steady-state or limit-cycle observable $O$ (e.g., excited population) separates input classes $u \in \{0,1\}^N$ via a hyperplane:
+
+$$
+O(u) \approx \sigma \left( \vec{w} \cdot \vec{u} + b \right)
+$$
+
+We test this by encoding inputs into the bath drives of Q1/Q2 and measuring if the lattice response can classify linearly separable logic gates (AND, OR) versus non-linear ones (XOR).
 
 ---
 
-## Conceptual pipeline
-
-1. **Model construction**
-   - Build local single-qubit operators and lattice interaction operators.
-   - Specify Floquet/bath schedules and coupling parameters.
-
-2. **Global open-system evolution**
-   - Evolve the **global density matrix** ρ(t) with discrete-time maps
-     (unitary + noise channels + bath-inspired amplitude/dephasing).
-
-3. **Diagnostics**
-   - Per-qubit Bloch vectors, purity, coherence proxies, excited-state population.
-   - Two-qubit and global entanglement indicators (log-negativity, concurrence, mutual information).
-   - Operator-space entanglement entropy (OSEE).
-   - Geometry proxies (Berry-rate proxy, QGT proxy, curvature proxy).
-   - Bures-distance “memory currents” and hotspot scores.
-   - Heat / work / entropy-production proxies (Otto-like bookkeeping).
-
-4. **Visualization**
-   - Animated dashboard with Bloch spheres, time-series, and optional Wigner panels.
-
-5. **Export & sharing**
-   - CSV/JSON plot-data bundles + an `index.html` convenience page.
-   - Optional local server and ngrok tunnel for sharing.
-
-## Definitions used by the prototype
-
-## Physics Definitions
-
-## Physics Definitions
-
-### 1) Qubit state and Bloch vector
-For a single qubit reduced state $\rho \in \mathbb{C}^{2 \times 2}$:
-
-$$
-\rho = \frac{1}{2} \left( I + \mathbf{r} \cdot \boldsymbol{\sigma} \right)
-$$
-
-$$
-\mathbf{r} = (x, y, z), \quad x = \mathrm{Tr}(\rho \sigma_x), \quad y = \mathrm{Tr}(\rho \sigma_y), \quad z = \mathrm{Tr}(\rho \sigma_z)
-$$
-
-### 2) SU(2) Wigner function for a spin-1/2 (Bloch sphere)
-A Stratonovich-Weyl form is:
-
-$$
-W(\Omega) = \mathrm{Tr}\left[ \rho \Delta(\Omega) \right]
-$$
-
-where $\Omega=(\theta, \phi)$ and $\Delta(\Omega)$ is the SU(2) Stratonovich-Weyl kernel.
-
-For spin-1/2, a common normalized convention gives:
-
-$$
-W(\theta, \phi) = \frac{1}{4\pi} \left( 1 + \sqrt{3} \mathbf{r} \cdot \mathbf{n}(\theta, \phi) \right)
-$$
-
-$$
-\mathbf{n}(\theta, \phi) = (\sin\theta \cos\phi, \sin\theta \sin\phi, \cos\theta)
-$$
-
-> Conventions vary by factors of $\sqrt{3}$ and $4\pi$; the key point is that $W$ is an affine function of the Bloch vector on the sphere.
-
-### 3) HO-embedded (harmonic oscillator) Wigner function
-When a qubit is **embedded** into a truncated oscillator space (e.g., the $|0\rangle, |1\rangle$ subspace of an $N_{ho}$-dimensional Fock space), the phase-space Wigner function can be computed with the standard oscillator definition:
-
-**Integral form:**
-$$
-W(x, p) = \frac{1}{\pi} \int_{-\infty}^{\infty} dy \, e^{2ipy} \langle x-y | \rho | x+y \rangle
-$$
-
-**Displacement-parity form (often used numerically):**
-$$
-W(\alpha) = \frac{2}{\pi} \mathrm{Tr} \left[ \rho D(2\alpha) \Pi D^\dagger(2\alpha) \right]
-$$
-
-where $D(\alpha)$ is the displacement operator and $\Pi$ is parity.
-
-### 4) Heat current (open quantum systems)
-If the dynamics decomposes into Liouvillian contributions:
-
-$$
-\dot{\rho} = -i [H(t), \rho] + \sum_k \mathcal{L}_k(\rho)
-$$
-
-then the (bath-associated) heat current from channel $k$ is often defined as:
-
-$$
-J_k(t) \equiv \dot{Q}_k(t) = \mathrm{Tr} \left[ H(t) \mathcal{L}_k(\rho(t)) \right]
-$$
-
-A **local per-qubit** heat current proxy can be written:
-
-$$
-J_i(t) = \mathrm{Tr} \left[ H_i(t) \mathcal{L}_i(\rho(t)) \right], \quad J_{lattice}(t) = \sum_i J_i(t)
-$$
-
-**Otto-like bookkeeping (qubit proxy):**
-If energy is approximated by:
-$$
-E(t) \approx \omega(t) p_e(t) = \frac{\omega(t)}{2} (1 - z(t))
-$$
-
-then one convenient split is:
-$$
-\dot{Q}(t) = -\frac{\omega(t)}{2} \dot{z}(t), \quad \dot{W}(t) = \frac{1-z(t)}{2} \dot{\omega}(t), \quad \dot{E}(t) = \dot{Q}(t) + \dot{W}(t)
-$$
-
-### 5) Von Neumann entropy and mutual information
-
-**Von Neumann entropy (bits):**
-$$
-S(\rho) = -\mathrm{Tr}(\rho \log_2 \rho)
-$$
-
-**Mutual information between subsystems A and B:**
-$$
-I(A:B) = S(\rho_A) + S(\rho_B) - S(\rho_{AB})
-$$
-
-### 6) Concurrence (two qubits)
-For a two-qubit state $\rho$, define the spin-flipped state:
-
-$$
-\tilde{\rho} = (\sigma_y \otimes \sigma_y) \rho^* (\sigma_y \otimes \sigma_y)
-$$
-
-and let $\lambda_1 \ge \lambda_2 \ge \lambda_3 \ge \lambda_4$ be the square-roots of the eigenvalues of $\rho \tilde{\rho}$. Then:
-
-$$
-C(\rho) = \max(0, \lambda_1 - \lambda_2 - \lambda_3 - \lambda_4)
-$$
-
-### 7) Log-negativity (two qubits)
-Let $\rho^{T_B}$ be the partial transpose with respect to subsystem $B$. The log-negativity is:
-
-$$
-E_{\mathcal{N}}(\rho) = \log_2 || \rho^{T_B} ||_1
-$$
-
-where $||X||_1 = \mathrm{Tr}\sqrt{X^\dagger X}$.
-
-### 8) Operator-Space Entanglement Entropy (OSEE)
-Treat the density operator as a vector in Liouville space, $|\rho\rangle\rangle$, and Schmidt-decompose across a bipartition:
-
-$$
-|\rho\rangle\rangle = \sum_k s_k |A_k\rangle\rangle \otimes |B_k\rangle\rangle, \quad \sum_k s_k^2 = 1
-$$
-
-Then OSEE (bits) is:
-$$
-S_{OSEE} = -\sum_k s_k^2 \log_2(s_k^2)
-$$
-
-### 9) Fidelity, Bures distance, and Bures length
-**Uhlmann fidelity:**
-$$
-F(\rho, \sigma) = \left( \mathrm{Tr} \sqrt{ \sqrt{\rho} \sigma \sqrt{\rho} } \right)^2
-$$
-
-**Bures distance:**
-$$
-D_B(\rho, \sigma) = \sqrt{ 2 \left( 1 - \sqrt{F(\rho, \sigma)} \right) }
-$$
-
-**Discrete Bures path length (thermodynamic/geometric length proxy):**
-$$
-L_B \approx \sum_{k=1}^{T} D_B(\rho_{k}, \rho_{k-1})
-$$
-
-$$
-\frac{dL_B}{dt} \bigg|_{t_k} \approx \frac{D_B(\rho_k, \rho_{k-1})}{\Delta t}
-$$
-
-### 10) "Memory current" and hotspot scores (Bures-lag method)
-Define a lagged Bures distance:
-$$
-D_{lag}(t) = D_B(\rho(t), \rho(t-\tau))
-$$
-
-Define "separation" and "return" currents as the positive/negative parts of the time derivative:
-$$
-J_{sep}(t) = \max \left( 0, \frac{d}{dt} D_{lag}(t) \right)
-$$
-$$
-J_{ret}(t) = \max \left( 0, -\frac{d}{dt} D_{lag}(t) \right)
-$$
-
-A simple hotspot score is then:
-$$
-H_{sep}(t) = \left( \frac{dL_B}{dt} \right) J_{sep}(t), \quad H_{ret}(t) = \left( \frac{dL_B}{dt} \right) J_{ret}(t)
-$$
-
-### 11) Berry-rate and geometry proxies (Bloch-path based)
-For a **unit Bloch direction** $\hat{\mathbf{n}}(t) = \mathbf{r}(t) / ||\mathbf{r}(t)||$, a discrete solid angle from three successive points $\hat{\mathbf{n}}_{k-1}, \hat{\mathbf{n}}_k, \hat{\mathbf{n}}_{k+1}$ can be computed via:
-
-$$
-\Omega_k = 2 \arctan \left( \frac{ \det[\hat{\mathbf{n}}_{k-1}, \hat{\mathbf{n}}_k, \hat{\mathbf{n}}_{k+1}] } { 1 + \hat{\mathbf{n}}_{k-1} \cdot \hat{\mathbf{n}}_k + \hat{\mathbf{n}}_k \cdot \hat{\mathbf{n}}_{k+1} + \hat{\mathbf{n}}_{k+1} \cdot \hat{\mathbf{n}}_{k-1} } \right)
-$$
-
-For spin-1/2, the Berry phase increment magnitude proxy is:
-$$
-|\Delta\gamma_k| \approx \frac{|\Omega_k|}{2}, \quad \dot{\gamma}(t_k) \approx \frac{|\Delta\gamma_k|}{\Delta t}
-$$
-
-A simple QGT-norm proxy and curvature proxy can be built from finite differences of $\hat{\mathbf{n}}(t)$:
-$$
-||\dot{\hat{\mathbf{n}}}||^2 \approx \frac{ ||\hat{\mathbf{n}}_{k} - \hat{\mathbf{n}}_{k-1}||^2 }{ \Delta t^2 }
-$$
-
-$$
-\kappa \approx \frac{ ||\dot{\hat{\mathbf{n}}} \times \ddot{\hat{\mathbf{n}}}|| }{ ||\dot{\hat{\mathbf{n}}}||^3 }
-$$
-
-## "Boolean Linear Separator" note
-The “Boolean Linear Separator” name references the fact that the prototype includes a perceptron-style / thermodynamic-neuron-style logic self-test for linearly separable boolean functions (e.g., NOT / NOR / 3‑MAJORITY). This is inspired by thermodynamic computing models that implement linearly separable functions with heat currents and auxiliary reservoirs.
-## “Boolean Linear Separator” note
-
-The “Boolean Linear Separator” name references the fact that the prototype includes a **perceptron-style / thermodynamic-neuron-style** logic self-test for **linearly separable** boolean functions (e.g., NOT / NOR / 3‑MAJORITY).  
-This is inspired by thermodynamic computing models that implement linearly separable functions with heat currents and auxiliary reservoirs.
+## 📊 Dashboard Visualization
+The code generates a high-resolution dashboard (GIF/MP4) containing:
+1.  **3D Bloch Spheres:** With trajectories, "memory hotspot" trails, and leakage warnings.
+2.  **Phase Space:** 3D Wigner function surfaces (single-qubit and collective).
+3.  **Metrics:** Real-time plots of Coherence, Purity, Bell-correlations, and Bures distance.
+4.  **Thermodynamics:** Virtual temperatures, heat currents, and Otto efficiency.
 
 ---
 
-## References (core)
+## 🚀 Usage
 
-- **Thermodynamic computing / thermodynamic neuron:**  
-  Lipka‑Bartosik, Perarnau‑Llobet, Brunner, *Thermodynamic computing via autonomous quantum thermal machines*, **Science Advances** 10(36):eadm8792 (2024). DOI: 10.1126/sciadv.adm8792
+To run the skeleton file (verification only):
+```bash
+python Floquet_Transmon_MultiQubit_Engine_Boolean_Linear_Separator_PUBLIC_SKELETON.py
 
-- **Transmon qubit:**  
-  Koch *et al.*, *Charge-insensitive qubit design derived from the Cooper pair box*, **Phys. Rev. A** 76, 042319 (2007). DOI: 10.1103/PhysRevA.76.042319
+## 📚 References (Core)
 
-- **GKSL / Lindblad master equation:**  
-  Gorini, Kossakowski, Sudarshan, *Completely positive dynamical semigroups of N-level systems*, **J. Math. Phys.** 17, 821 (1976). DOI: 10.1063/1.522979  
-  Lindblad, *On the generators of quantum dynamical semigroups*, **Commun. Math. Phys.** 48, 119 (1976). DOI: 10.1007/BF01608499
+**Thermodynamic Computing & Neurons**
+* Lipka‑Bartosik, Perarnau‑Llobet, Brunner. *Thermodynamic computing via autonomous quantum thermal machines*. **Science Advances** 10(36):eadm8792 (2024).  
+    [DOI: 10.1126/sciadv.adm8792](https://doi.org/10.1126/sciadv.adm8792)
 
-- **Floquet theory:**  
-  Shirley, *Solution of the Schrödinger equation with a Hamiltonian periodic in time*, **Phys. Rev.** 138, B979 (1965). DOI: 10.1103/PhysRev.138.B979  
-  Sambe, *Steady states and quasienergies of a quantum-mechanical system in an oscillating field*, **Phys. Rev. A** 7, 2203 (1973). DOI: 10.1103/PhysRevA.7.2203
+**Transmon Qubit Theory**
+* Koch et al. *Charge-insensitive qubit design derived from the Cooper pair box*. **Phys. Rev. A** 76, 042319 (2007).  
+    [DOI: 10.1103/PhysRevA.76.042319](https://doi.org/10.1103/PhysRevA.76.042319)
 
-- **SU(2) Wigner / Stratonovich–Weyl phase space:**  
-  Klimov, Romero, de Guise, *Generalized SU(2) covariant Wigner functions and some of their applications*, **J. Phys. A** 50, 323001 (2017). DOI: 10.1088/1751-8121/50/32/323001
+**Open Systems (GKSL / Lindblad)**
+* Gorini, Kossakowski, Sudarshan. *Completely positive dynamical semigroups of N-level systems*. **J. Math. Phys.** 17, 821 (1976).  
+    [DOI: 10.1063/1.522979](https://doi.org/10.1063/1.522979)
+* Lindblad. *On the generators of quantum dynamical semigroups*. **Commun. Math. Phys.** 48, 119 (1976).  
+    [DOI: 10.1007/BF01608499](https://doi.org/10.1007/BF01608499)
 
-- **OSEE:**  
-  Prosen, Pižorn, *Operator space entanglement entropy in a transverse Ising chain*, **Phys. Rev. A** 76, 032316 (2007). DOI: 10.1103/PhysRevA.76.032316
+**Floquet Theory**
+* Shirley. *Solution of the Schrödinger equation with a Hamiltonian periodic in time*. **Phys. Rev.** 138, B979 (1965).  
+    [DOI: 10.1103/PhysRev.138.B979](https://doi.org/10.1103/PhysRev.138.B979)
+* Sambe. *Steady states and quasienergies of a quantum-mechanical system in an oscillating field*. **Phys. Rev. A** 7, 2203 (1973).  
+    [DOI: 10.1103/PhysRevA.7.2203](https://doi.org/10.1103/PhysRevA.7.2203)
 
-- **Concurrence:**  
-  Wootters, *Entanglement of formation of an arbitrary state of two qubits*, **Phys. Rev. Lett.** 80, 2245 (1998). DOI: 10.1103/PhysRevLett.80.2245
+**Entanglement & Geometry Diagnostics**
+* **OSEE:** Prosen, Pižorn. *Operator space entanglement entropy in a transverse Ising chain*. **Phys. Rev. A** 76, 032316 (2007).  
+    [DOI: 10.1103/PhysRevA.76.032316](https://doi.org/10.1103/PhysRevA.76.032316)
+* **Concurrence:** Wootters. *Entanglement of formation of an arbitrary state of two qubits*. **Phys. Rev. Lett.** 80, 2245 (1998).  
+    [DOI: 10.1103/PhysRevLett.80.2245](https://doi.org/10.1103/PhysRevLett.80.2245)
+* **Log-negativity:** Vidal, Werner. *Computable measure of entanglement*. **Phys. Rev. A** 65, 032314 (2002).  
+    [DOI: 10.1103/PhysRevA.65.032314](https://doi.org/10.1103/PhysRevA.65.032314)
+* **Berry Phase:** Berry. *Quantal phase factors accompanying adiabatic changes*. **Proc. R. Soc. A** 392, 45 (1984).  
+    [DOI: 10.1098/rspa.1984.0023](https://doi.org/10.1098/rspa.1984.0023)
 
-- **Log-negativity:**  
-  Vidal, Werner, *Computable measure of entanglement*, **Phys. Rev. A** 65, 032314 (2002). DOI: 10.1103/PhysRevA.65.032314
-
-- **Bures distance / fidelity:**  
-  Uhlmann, *The “transition probability” in the state space of a *‑algebra*, **Rep. Math. Phys.** 9, 273 (1976). DOI: 10.1016/0034-4877(76)90060-4  
-  Jozsa, *Fidelity for mixed quantum states*, **J. Mod. Opt.** 41, 2315 (1994). DOI: 10.1080/09500349414552171  
-  Braunstein, Caves, *Statistical distance and the geometry of quantum states*, **Phys. Rev. Lett.** 72, 3439 (1994). DOI: 10.1103/PhysRevLett.72.3439
-
-- **Thermodynamic length:**  
-  Crooks, *Measuring thermodynamic length*, **Phys. Rev. Lett.** 99, 100602 (2007). DOI: 10.1103/PhysRevLett.99.100602  
-  Scandi, Perarnau‑Llobet, *Thermodynamic length in open quantum systems*, **Quantum** 3, 197 (2019). DOI: 10.22331/q-2019-10-24-197
-
-- **Berry phase:**  
-  Berry, *Quantal phase factors accompanying adiabatic changes*, **Proc. R. Soc. A** 392, 45 (1984). DOI: 10.1098/rspa.1984.0023
-
-- **QuTiP (optional numerical backend):**  
-  Johansson, Nation, Nori, **Comput. Phys. Commun.** 183, 1760 (2012). DOI: 10.1016/j.cpc.2012.02.021  
-  Johansson, Nation, Nori, **Comput. Phys. Commun.** 184, 1234 (2013). DOI: 10.1016/j.cpc.2012.11.019
+**Fidelity & Metric Geometry**
+* Uhlmann. *The “transition probability” in the state space of a C*-algebra*. **Rep. Math. Phys.** 9, 273 (1976).  
+    [DOI: 10.1016/0034-4877(76)90060-4](https://doi.org/10.1016/0034-4877(76)90060-4)
+* Jozsa. *Fidelity for mixed quantum states*. **J. Mod. Opt.** 41, 2315 (1994).  
+    [DOI: 10.1080/09500349414552171](https://doi.org/10.1080/09500349414552171)
+* **Thermodynamic Length:** Crooks. *Measuring thermodynamic length*. **Phys. Rev. Lett.** 99, 100602 (2007).  
+    [DOI: 10.1103/PhysRevLett.99.100602](https://doi.org/10.1103/PhysRevLett.99.100602)
 
 ---
 
-## Disclaimer
-
-This repository is **not** a hardware-validated transmon simulator and should not be treated as an engineering blueprint.  
-It is a research/visualization prototype exploring ideas at the intersection of Floquet dynamics, open systems, and thermodynamic/information diagnostics.
+> **⚠️ Disclaimer** > This repository is **not** a hardware-validated transmon simulator and should not be treated as an engineering blueprint. It is a research/visualization prototype exploring ideas at the intersection of Floquet dynamics, open systems, and thermodynamic/information diagnostics.
