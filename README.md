@@ -22,12 +22,11 @@ $$
 H(t) = \sum_{j=1}^4 \left[ \frac{\omega_{01,j}(t)}{2} \sigma_z^{(j)} + \frac{\Omega_d(t)}{2} \left( \sigma_x^{(j)} \cos(\phi_j(t)) + \sigma_y^{(j)} \sin(\phi_j(t)) \right) \right] + H_{\text{int}}
 $$
 
-The interaction term $H_{\text{int}}$ includes capacitive (exchange) and inductive (Ising-like) coupling:
+where the interaction term includes capacitive (exchange) and inductive coupling:
 
 $$
-H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} \left( \sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)} \right) + J_{\text{ind}} \sigma_z^{(i)}\sigma_z^{(j)} \right]
+H_{\text{int}} = \sum_{\langle i,j \rangle} \left[ J_{\text{cap}} \, \left( \sigma_x^{(i)}\sigma_x^{(j)} + \sigma_y^{(i)}\sigma_y^{(j)} \right) + J_{\text{ind}} \, \sigma_z^{(i)}\sigma_z^{(j)} \right]
 $$
-
 ### 2. Open System Dynamics (GKSL)
 The system evolves according to the Lindblad master equation:
 
